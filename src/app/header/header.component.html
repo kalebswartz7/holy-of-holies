@@ -1,0 +1,25 @@
+<link href="https://fonts.googleapis.com/css?family=B612&display=swap" rel="stylesheet">
+<div class="container">
+  <h1 class="header">Holy of Holies</h1>
+  <!-- Translation button (left side) -->
+  <mat-form-field class="translation">
+    <mat-label>Translation</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let translation of translations" [value]="translation.name">
+        {{translation.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- Book selection (right side) -->
+  <mat-form-field class="book">
+    <mat-label>Book</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let book of books" [value]="book.name">
+        {{book.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+
+
