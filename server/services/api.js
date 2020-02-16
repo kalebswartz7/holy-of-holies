@@ -114,9 +114,6 @@ const getBooksAndChapters = (i) => {
                 };
                 console.log("File has been created");
             });
-            
-            
-
         }
     });
 
@@ -126,10 +123,31 @@ const getBooksAndChapters = (i) => {
     xhr.send();
 }
 
+const getChapter = (bibleId, bookId, chapterId) => {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'text';
+
+    xhr.addEventListener("readystatechange", function () {
+        console.log(xhr.readyState);
+        console.log(xhr.status);
+        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
+            console.log('Made it');
+            response_text = JSON.parse(xhr.responseText);
+            response_text = response_text.data.content
+            console.log(response_text);
+        }
+    });
+
+    xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/chapters/" + chapterId + "?content-type=text");
+    xhr.setRequestHeader(`api-key`, apiKey);
+    xhr.send();
+}
+
 exports.apiTest = apiTest;
 exports.getBook = getBook;
 exports.getBooks = getBooks;
 exports.getBooksAndChapters = getBooksAndChapters;
+exports.getChapter = getChapter;
 
 
 
