@@ -1,10 +1,10 @@
 const express = require("express");
+const bodyParser = require("body-parser")
 const bibleRoutes = require("./routes/bible");
 const mongoose = require("mongoose");
 const secrets = require("./secrets");
 const app = express(); 
-
-const port = 3000
+const cors = require('cors');
 
 connection_string = 
     "mongodb+srv://kalebswartz7:" + 
@@ -64,11 +64,8 @@ db.once("open", function() {
 
     */
 })
-
-
+app.use(cors());
 app.use("/", bibleRoutes);
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
-
+module.exports = app;
 
 

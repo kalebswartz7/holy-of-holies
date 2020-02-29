@@ -1,0 +1,28 @@
+h1 {
+    text-align: center;
+    font-family: 'B612', sans-serif;
+    font-size: 50px;
+    color: #123c29;
+}
+
+.header {
+  grid-area: header;
+}
+
+.button {
+  grid-area: button; 
+}
+.button2 {
+  grid-area: button2; 
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  grid-template-rows: auto;
+  grid-template-areas: 
+    "header header header"
+    ". button ."
+    ". button2 .";
+  grid-column-gap: 10px;
+}

@@ -46,8 +46,6 @@ const getBook = (bibleId, bookId) => {
 
             books['data'][0]['Chapters'] = JSON.stringify(response);
             console.log(books['data'][0])
-
-
         }
     });
 
