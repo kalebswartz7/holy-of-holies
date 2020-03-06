@@ -8,7 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 export class BibleService {
   constructor(private http: HttpClient) {}
 
-    configUrl = 'http://localhost:3000/';
+    configUrl = 'http://localhost:3000/populate/06125adad2d5898a-01';
 
     
 

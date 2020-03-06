@@ -1,8 +1,7 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const secrets = require('../secrets');
 var fs = require("fs");
-var books = require("../books.json");
-
+const mongoose = require("mongoose");
 const apiKey = secrets.apiKey['id'];
 
  /*
@@ -61,91 +60,103 @@ const getBook = (bibleId, bookId) => {
   including book ids 
  */
 const getBooks = (bibleId) => {
-    console.log("Fetching... \nBibleId: " + bibleId)
-    console.log('hi')
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'text';
-
-    xhr.addEventListener("readystatechange", function () {
-        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
-            response_text = xhr.responseText;
-            response = JSON.parse(xhr.responseText);
-
-            fs.writeFile("./books.json", JSON.stringify(response), (err) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                };
-                console.log("File has been created");
-            });
-
-        }
-    });
-
-    xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/books");
-    xhr.setRequestHeader(`api-key`, apiKey);
-    xhr.send();
+    return new Promise((resolve, reject) => {
+        console.log("Fetching... BibleId: " + bibleId)
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        response_text = {}; 
+    
+        xhr.addEventListener("readystatechange", function () {
+            if (xhr.readyState === xhr.DONE && xhr.status == 200) {
+                response_text = JSON.parse(xhr.responseText);
+                resolve(response_text);
+            }
+        });
+    
+        xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/books");
+        xhr.setRequestHeader(`api-key`, apiKey);
+        xhr.send();
+    })
+    
+    
 }
 
-const getBooksAndChapters = (i) => {
-    console.log("Fetching entry... " + i)
-    bibleId = books['data'][i]['bibleId'];
-    bookId = books['data'][i]['id'];
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'text';
-
-    xhr.addEventListener("readystatechange", function () {
-        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
-            response_text = xhr.responseText;
-            response = JSON.parse(response_text);
-            //console.log(books);
-            books["data"][i]["Chapters"] = response["data"];
-            //console.log(books["data"][i]["Chapters"]);
-            //books["data"][i]["Chapters"] = response;
-            //console.log(books["data"][i]);
-
-            
-            fs.writeFile("./books.json", JSON.stringify(books), (err) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                };
-                console.log("File has been created");
-            });
-        }
-    });
-
-    xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + 
-            "/books/" + bookId + "/chapters");
-    xhr.setRequestHeader(`api-key`, apiKey);
-    xhr.send();
+const getChapters = (bibleId, bookId) => {
+    return new Promise((resolve, reject) => {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+    
+        xhr.addEventListener("readystatechange", function () {
+            if (xhr.readyState === xhr.DONE && xhr.status == 200) {
+                response_text = JSON.parse(xhr.responseText);
+                resolve(response_text);
+            }
+        });
+    
+        xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + 
+                "/books/" + bookId + "/chapters");
+        xhr.setRequestHeader(`api-key`, apiKey);
+        xhr.send();
+    })
+    
 }
 
-const getChapter = (bibleId, bookId, chapterId) => {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'text';
+const getChapter = (bibleId, chapterId) => {
+    return new Promise((resolve, reject) => {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+    
+        xhr.addEventListener("readystatechange", function () {
+            if (xhr.readyState === xhr.DONE && xhr.status == 200) {
+                response_text = JSON.parse(xhr.responseText);
+                response_text = response_text.data.content
+                resolve(response_text)
+            }
+        });
+    
+        xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/chapters/" + chapterId + "?content-type=text");
+        xhr.setRequestHeader(`api-key`, apiKey);
+        xhr.send();
+    })
+}
 
-    xhr.addEventListener("readystatechange", function () {
-        console.log(xhr.readyState);
-        console.log(xhr.status);
-        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
-            console.log('Made it');
-            response_text = JSON.parse(xhr.responseText);
-            response_text = response_text.data.content
-            console.log(response_text);
+const populateMongo = async (bibleId) => {
+    // Create JSON objects that we will make up our schema 
+    booksObj = { id: String,
+                content: [
+                  {chapterId: String,
+                  text: String}
+                ]
+              }
+
+    // Get books for bible 
+    const books = await getBooks(bibleId)
+    for (i in books.data) {
+        bookId = books.data[i].id 
+        content = []
+        // Get chapters for each book 
+        const chapters = await getChapters(bibleId, bookId);
+        for (j in chapters.data) {
+            chapterId = chapters.data[j].id
+            const text = await getChapter(bibleId, chapterId)
+            console.log(text)
         }
-    });
+    }
 
-    xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/chapters/" + chapterId + "?content-type=text");
-    xhr.setRequestHeader(`api-key`, apiKey);
-    xhr.send();
+    // Connect to MongoDB, Send JSON object to database 
+    var bibleSchema = new mongoose.Schema({
+        bibleId: String,
+        books: [{chapterId: String,
+                     text: String}],
+    });
 }
 
 exports.apiTest = apiTest;
 exports.getBook = getBook;
 exports.getBooks = getBooks;
-exports.getBooksAndChapters = getBooksAndChapters;
+exports.getChapters = getChapters;
 exports.getChapter = getChapter;
+exports.populateMongo = populateMongo;
 
 
 

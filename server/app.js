@@ -6,6 +6,7 @@ const secrets = require("./secrets");
 const app = express(); 
 const cors = require('cors');
 
+/*
 connection_string = 
     "mongodb+srv://kalebswartz7:" + 
     secrets.mongoDBPassword +
@@ -26,7 +27,7 @@ db.once("open", function() {
 
     /* Used to construct documents. In this case each document will be a kitten
        with properties and behaviors as described in the above schema 
-    */
+    
 
     // We can create functions for our schema 
     // Functions must be added before we compile it with mongoose.model
@@ -62,8 +63,10 @@ db.once("open", function() {
         console.log(kittens);
     })
 
-    */
 })
+*/
+
+
 app.use(cors());
 app.use("/", bibleRoutes);
 module.exports = app;

@@ -6,7 +6,14 @@ router.get('/', function (req, res) {
     //res.send('hello world')
     var apiResult = api.apiTest();
     res.send("Hi");
-  })
+})
+
+// Call to populate database from specific translation 
+router.get('/populate/:bibleId', function(req, res) {
+  bibleId = req.params['bibleId'];
+  var apiResult = api.populateMongo(bibleId); 
+  res.send("MongoDB Populated");
+})
 
  /*
   Call to get a specific book with a specific bible translation 
