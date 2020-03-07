@@ -60,6 +60,13 @@ router.get('/bibles/:bibleId/chapters/:chapterId', function(req, res) {
 
 }); 
 
+router.get('/translations', function(req, res) {
+  var apiResult = api.getTranslations()
+  .then((translations) => {
+    res.send(translations)
+  })
+})
+
 module.exports = router;
 
 

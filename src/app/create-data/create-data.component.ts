@@ -9,15 +9,15 @@ import { BibleService } from '../services/bible.service';
 })
 export class CreateDataComponent {
     constructor(public bibleService: BibleService) {}
-    clearMongo() {
-        this.bibleService.getConfig()
+    populateMongo() {
+        this.bibleService.populateMongoConfig()
         .subscribe((data) => {
             window.alert(data);
         })
         //window.alert('DB data cleared!');
     }
 
-    populateMongo() {
+    clearMongo() {
         window.alert('DB populated!');
     }
 

@@ -10,11 +10,13 @@ h1 {
 }
 
 .translation {
+  width: 70%;
   grid-area: translation; 
   justify-self: end;
 }
 
 .book {
+  width: 70%;
   grid-area: book; 
   justify-self: start;
 }
