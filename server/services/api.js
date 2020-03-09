@@ -10,82 +10,21 @@ var translationSchema = new mongoose.Schema({
     id: String
 })
 
- /*
-  Test/Sandbox API call 
- */ 
-const apiTest = () => {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'text';
-
-    xhr.addEventListener("readystatechange", function () {
-        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
-            response_text = xhr.responseText;
-            response = JSON.parse(xhr.responseText);
-            for (var i = 0; i < response.data.length; i++) {
-                //console.log(response.data[i].id);
-                //console.log(response.data[i].name + '\n');
-                if (response.data[i].language.id == 'eng') {
-                    console.log(response.data[i].name + '\n' + 
-                                "ID: " + response.data[i].id);
-                }
-            }
+var bookSchema = new mongoose.Schema({
+    name: String,
+    id: String,
+    order: Number,
+    bibleId: String,
+    chapters: [
+        {
+            id: String,
+            bookId: String,
+            number: String,
+            reference: String
         }
-    });
-
-    xhr.open("GET", "https://api.scripture.api.bible/v1/bibles");
-    xhr.setRequestHeader(`api-key`, apiKey);
-    xhr.send();
-}
- /*
-  Call to get a specific book with a specific bible translation 
- */
-const getBook = (bibleId, bookId) => {
-    console.log("Fetching... \nBibleId: " + bibleId + " BookId: " + bookId)
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'text';
-
-    xhr.addEventListener("readystatechange", function () {
-        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
-            response_text = xhr.responseText;
-            response = JSON.parse(xhr.responseText);
-
-            books['data'][0]['Chapters'] = JSON.stringify(response);
-            console.log(books['data'][0])
-        }
-    });
-
-    xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + 
-            "/books/" + bookId + "/chapters");
-    xhr.setRequestHeader(`api-key`, apiKey);
-    xhr.send();
-
-
-}
- /*
-  Call to create / update the books.json file that holds all the book data 
-  including book ids 
- */
-const getBooks = (bibleId) => {
-    return new Promise((resolve, reject) => {
-        console.log("Fetching... BibleId: " + bibleId)
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = 'text';
-        response_text = {}; 
+    ]
     
-        xhr.addEventListener("readystatechange", function () {
-            if (xhr.readyState === xhr.DONE && xhr.status == 200) {
-                response_text = JSON.parse(xhr.responseText);
-                resolve(response_text);
-            }
-        });
-    
-        xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/books");
-        xhr.setRequestHeader(`api-key`, apiKey);
-        xhr.send();
-    })
-    
-    
-}
+})
 
 const getChapters = (bibleId, bookId) => {
     return new Promise((resolve, reject) => {
@@ -194,20 +133,6 @@ const populateMongo = async (bibleId) => {
     db.on("error", console.error.bind(console, "connection error:"))
     db.once("open", function() {
         console.log("We are connected")
-
-        var bookSchema = new mongoose.Schema({
-            name: String,
-            id: String,
-            order: Number,
-            bibleId: String,
-            chapters: [{
-                id: String,
-                bookId: String,
-                number: String,
-                reference: String
-            }]
-            
-        })
         // Send all books to mongo 
         for (i = 0; i < books.length; i++) {
             console.log('made it')
@@ -222,7 +147,6 @@ const populateMongo = async (bibleId) => {
 
 const getTranslations = () => {
     return new Promise((resolve, reject) => {
-
         connection_string = 
         "mongodb+srv://kalebswartz7:" + 
         secrets.mongoDBPassword +
@@ -250,10 +174,36 @@ const getTranslations = () => {
 
 }
 
-exports.apiTest = apiTest;
-exports.getBook = getBook;
-exports.getBooks = getBooks;
+const getBooks = (bibleId) => {
+    return new Promise((resolve, reject) => {
+        connection_string = 
+        "mongodb+srv://kalebswartz7:" + 
+        secrets.mongoDBPassword +
+        "@holy-of-holies-ols82.mongodb.net/holyOfHolies?retryWrites=true&w=majority"
+
+        mongoose.connect(connection_string, 
+            {useUnifiedTopology: true, useNewUrlParser: true})
+
+        var db = mongoose.connection;
+        db.on("error", console.error.bind(console, "connection error:"))
+        db.once("open", function() {
+            console.log("We are connected");
+            var Books = mongoose.model('Books', bookSchema, 'holyOfHolies')
+            Books.find({bibleId: bibleId}, function (err, books) {
+                if (err) {
+                    return console.error(err)
+                }
+                resolve(books)
+                mongoose.disconnect()
+            })
+
+
+        })
+    })
+}
+
 exports.getChapters = getChapters;
 exports.getChapter = getChapter;
 exports.populateMongo = populateMongo;
 exports.getTranslations = getTranslations; 
+exports.getBooks = getBooks; 

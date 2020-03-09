@@ -7,6 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { CreateDataComponent } from './create-data/create-data.component';
 import { MatSelectModule}  from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatSelectModule,
     MatButtonModule,
     HttpClientModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

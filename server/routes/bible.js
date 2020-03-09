@@ -40,15 +40,6 @@ router.get('/bibles/:bibleId', function(req, res) {
   res.send("Book fetched!");
 })
 
- /*  
-  Call to get all chapters for a specific book entry in books.json and update 
-  the books.json object with those chapters 
- */
-router.get('/books/:bookEntry', function(req, res) {
-  entry = req.params['bookEntry'];
-  var apiResult = api.getBooksAndChapters(entry);
-  res.send('Got chapters');
-})
 
 router.get('/bibles/:bibleId/chapters/:chapterId', function(req, res) {
   bibleId = req.params["bibleId"];
@@ -64,6 +55,13 @@ router.get('/translations', function(req, res) {
   var apiResult = api.getTranslations()
   .then((translations) => {
     res.send(translations)
+  })
+})
+
+router.get('/books/:bibleId', function(req, res) {
+  var apiResult = api.getBooks(req.params["bibleId"])
+  .then((books) => {
+    res.send(books)
   })
 })
 

@@ -4,14 +4,14 @@
   <!-- Translation button (left side) -->
   <mat-form-field class="translation">
     <mat-label>Translation</mat-label>
-    <mat-select>
+    <mat-select (selectionChange)="getBooks($event.value)">
       <mat-option *ngFor="let translation of translations" [value]="translation.Name">
         {{translation.Name}}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <!-- Book selection (right side) -->
-  <mat-form-field class="book">
+  <mat-form-field *ngIf="showBooks" class="book">
     <mat-label>Book</mat-label>
     <mat-select>
       <mat-option *ngFor="let book of books" [value]="book.name">

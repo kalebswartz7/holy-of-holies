@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { books } from '../books'
 import { BibleService } from '../services/bible.service';
 
 @Component({
@@ -10,6 +9,9 @@ import { BibleService } from '../services/bible.service';
 export class HeaderComponent implements OnInit {
   constructor(public bibleService: BibleService) {}
   translations
+  books
+  showBooks = false
+
   ngOnInit() {
     // Get available translations from Mongo for translation dropdown 
     this.bibleService.getAvailableTranslations()
@@ -17,6 +19,13 @@ export class HeaderComponent implements OnInit {
       this.translations = translationResult
     })
   }
-  books = books;
+
+  getBooks() {
+    this.showBooks = true
+    this.bibleService.getAvailableBooks()
+    .subscribe((bookResult) => {
+      this.books = bookResult
+    })
+  }
   showFiller = false;
 }
