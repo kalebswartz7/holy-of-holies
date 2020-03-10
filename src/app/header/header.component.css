@@ -7,6 +7,7 @@ h1 {
 
 .header {
   grid-area: header;
+  justify-self: center;
 }
 
 .translation {
@@ -14,19 +15,32 @@ h1 {
   grid-area: translation; 
   justify-self: end;
 }
+.text {
+  grid-area: text;
+  justify-self: center;
+  font-family: 'B612', sans-serif;
+}
 
 .book {
   width: 70%;
   grid-area: book; 
+  justify-self: center;
+}
+
+.chapter {
+  width: 70%;
+  grid-area: chapter; 
   justify-self: start;
 }
 
 .container {
+  align-self: center;
   display: grid;
-  grid-template-columns: 10px 1fr 2fr 1fr 10px;
+  grid-template-columns: 0.5fr 1fr 0.5fr 1fr 0.5fr 1fr 0.5fr;
   grid-template-rows: auto;
   grid-template-areas: 
-    "header header header header header"
-    ". translation . book .";
+    "header header header header header header header"
+    ". translation . book . chapter ."
+    ". text text text text text .";
   grid-column-gap: 10px;
 }

@@ -1,27 +1,22 @@
-# HolyOfHolies
+# About HolyOfHolies
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.9.
+This project is a result of two of my passions, **development** and learning about the **word of God**. 
 
-## Development server
+The general idea behind this project is to replicate something like bible.com, with new features being added over time. 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+I used [Bible API](scripture.api.bible) to get the actual bible data, stored the data I needed in MongoDB, and use the Angular frontend to query Mongo and get the data necerssary. Express and NodeJS are used for the backend calls, primarily to query API data and send it to
+Mongo. 
 
-## Code scaffolding
+Currently this project is only available **locally**, but I am working to make it public soon. 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## How to Use 
+* Command `ng serve` to spin up the angular frontend
+* Command `nodemon server.js` to spin up the backend 
+Select a specific translation, then book, then chapter. Books available are based 
+on the translation selected and chapters are based on the book selected. The actual 
+content will then be displayed. 
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Upcoming features 
+* Frontend design optimizations 
+* Buttons for going to the next / previous chapter 
+* Hosting the express routes on something like AWS Lambda and the frontend on Heroku 

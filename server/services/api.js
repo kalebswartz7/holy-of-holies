@@ -20,11 +20,35 @@ var bookSchema = new mongoose.Schema({
             id: String,
             bookId: String,
             number: String,
-            reference: String
+            reference: String,
+            text: String
         }
     ]
     
 })
+
+const getBooksForMongo = (bibleId) => {
+    return new Promise((resolve, reject) => {
+        console.log("Fetching... BibleId: " + bibleId)
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        response_text = {}; 
+    
+        xhr.addEventListener("readystatechange", function () {
+            if (xhr.readyState === xhr.DONE && xhr.status == 200) {
+                response_text = JSON.parse(xhr.responseText);
+                resolve(response_text);
+            }
+        });
+    
+        xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/books");
+        xhr.setRequestHeader(`api-key`, apiKey);
+        xhr.send();
+    })
+    
+    
+}
+
 
 const getChapters = (bibleId, bookId) => {
     return new Promise((resolve, reject) => {
@@ -59,7 +83,7 @@ const getChapter = (bibleId, chapterId) => {
             }
         });
     
-        xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/chapters/" + chapterId + "?content-type=text");
+        xhr.open("GET", "https://api.scripture.api.bible/v1/bibles/" + bibleId + "/chapters/" + chapterId + "?content-type=html");
         xhr.setRequestHeader(`api-key`, apiKey);
         xhr.send();
     })
@@ -73,7 +97,7 @@ const createBooks = async (bibleId) => {
         booksList = []
         iterate = [1]
         // Get books for bible 
-        const books = await getBooks(bibleId)
+        const books = await getBooksForMongo(bibleId)
     
         //for (i in books.data) {
         for (i in books.data) {
@@ -98,18 +122,20 @@ const createBooks = async (bibleId) => {
                 chapterBookId = chapters.data[j].bookId
                 number = chapters.data[j].number
                 reference = chapters.data[j].reference
+
+                // Get text for specific chapter 
+                const text = await getChapter(bibleId, chapterId)
     
                 chapterObj = { 
                                 id: chapterId,
                                 bookId: chapterBookId,
                                 number: number,
-                                reference: reference
+                                reference: reference,
+                                text: text
                             }
     
                 bookObj.chapters.push(chapterObj)
                 console.log('Pushing Chapter ' + chapterId)
-                // const text = await getChapter(bibleId, chapterId)
-                // console.log(text)
             }
             booksList.push(bookObj)
             //}
@@ -121,6 +147,8 @@ const createBooks = async (bibleId) => {
 const populateMongo = async (bibleId) => {
     // Get all books for translation!!!
     const books = await createBooks(bibleId)
+    console.log(books[0])
+
     connection_string = 
     "mongodb+srv://kalebswartz7:" + 
     secrets.mongoDBPassword +
@@ -143,6 +171,7 @@ const populateMongo = async (bibleId) => {
         
         
     })
+
 }
 
 const getTranslations = () => {
@@ -195,7 +224,7 @@ const getBooks = (bibleId) => {
                 }
                 resolve(books)
                 mongoose.disconnect()
-            })
+            }).sort({order: 1})
 
 
         })
@@ -207,3 +236,4 @@ exports.getChapter = getChapter;
 exports.populateMongo = populateMongo;
 exports.getTranslations = getTranslations; 
 exports.getBooks = getBooks; 
+exports.getBooksForMongo = getBooksForMongo; 
