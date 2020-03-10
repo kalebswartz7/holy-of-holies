@@ -20,3 +20,5 @@ content will then be displayed.
 * Frontend design optimizations 
 * Buttons for going to the next / previous chapter 
 * Hosting the express routes on something like AWS Lambda and the frontend on Heroku 
+
+![HolyOfHolies](/readme_src/HolyOfHolies.gif)
