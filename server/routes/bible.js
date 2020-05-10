@@ -2,12 +2,6 @@ const express = require("express");
 const router = express.Router();
 const api = require('../services/api');
 
-router.get('/', function (req, res) {
-    //res.send('hello world')
-    var apiResult = api.apiTest();
-    res.send("Hi");
-})
-
 // Call to populate database from specific translation 
 router.get('/populate/:bibleId', function(req, res) {
   bibleId = req.params['bibleId'];

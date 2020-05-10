@@ -1,35 +1,51 @@
 <link href="https://fonts.googleapis.com/css?family=B612&display=swap" rel="stylesheet">
-<div class="container">
-  <h1 class="header">Holy of Holies</h1>
-  <!-- Translation button (left side) -->
-  <mat-form-field class="translation">
-    <mat-label>Translation</mat-label>
-    <mat-select (selectionChange)="getBooks($event.value)">
-      <mat-option *ngFor="let translation of translations" [value]="translation.Name">
-        {{translation.Name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <!-- Book selection (right side) -->
-  <mat-form-field *ngIf="showBooks" class="book">
-    <mat-label>Book</mat-label>
-    <mat-select (selectionChange)="getChapters($event.value)">
-      <mat-option *ngFor="let book of books" [value]="book.name">
-        {{book.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field *ngIf="showChapters" class="chapter">
-    <mat-label>Chapter</mat-label>
-    <mat-select (selectionChange)="getText($event.value)">
-      <mat-option *ngFor="let chapter of chapters" [value]="chapter.number">
-        {{chapter.number}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <div class="text" [innerHtml]="text"></div>
 
-</div>
+  <header id="main-header">
+    <div class="container">
+      <h1>Holy of Holies</h1>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="field-select">
+      <mat-form-field id="translation-field">
+        <mat-label>Translation</mat-label>
+        <mat-select (selectionChange)="getBooks($event.value)">
+          <mat-option *ngFor="let translation of translations" [value]="translation.Name">
+            {{translation.Name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    
+    <div class="field-select">
+      <!-- Book selection (right side) -->
+      <mat-form-field *ngIf="showBooks" id="book">
+        <mat-label>Book</mat-label>
+        <mat-select (selectionChange)="getChapters($event.value)">
+          <mat-option *ngFor="let book of books" [value]="book.name">
+            {{book.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+      
+    <div class="field-select">
+      <mat-form-field *ngIf="showChapters" id="chapter">
+        <mat-label>Chapter</mat-label>
+        <mat-select (selectionChange)="getText($event.value)">
+          <mat-option *ngFor="let chapter of chapters" [value]="chapter.number">
+            {{chapter.number}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Translation button (left side) -->
+  <div class="text container" [innerHtml]="text">
+  </div>
+
 
 
 

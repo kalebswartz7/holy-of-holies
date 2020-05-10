@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { BibleService } from '../services/bible.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent implements OnInit {
   constructor(public bibleService: BibleService) {}
@@ -40,7 +41,6 @@ export class HeaderComponent implements OnInit {
     this.bookSelected = bookSelected
     for (let i in this.books) {
       if (this.books[i].name == bookSelected) {
-        console.log(this.books[i])
         this.chapters = this.books[i].chapters
         this.showChapters = true
       }
@@ -54,7 +54,6 @@ export class HeaderComponent implements OnInit {
     this.chapterSelected = chapterSelected
     for (let i in this.chapters) {
       if (this.chapters[i].number == chapterSelected) {
-        console.log(this.chapters[i].text)
         this.text = this.chapters[i].text
       }
     }

@@ -1,46 +1,51 @@
-h1 {
-    text-align: center;
-    font-family: 'B612', sans-serif;
-    font-size: 50px;
-    color: #123c29;
-}
-
-.header {
-  grid-area: header;
-  justify-self: center;
-}
-
-.translation {
-  width: 70%;
-  grid-area: translation; 
-  justify-self: end;
-}
-.text {
-  grid-area: text;
-  justify-self: center;
-  font-family: 'B612', sans-serif;
-}
-
-.book {
-  width: 70%;
-  grid-area: book; 
-  justify-self: center;
-}
-
-.chapter {
-  width: 70%;
-  grid-area: chapter; 
-  justify-self: start;
-}
-
 .container {
-  align-self: center;
-  display: grid;
-  grid-template-columns: 0.5fr 1fr 0.5fr 1fr 0.5fr 1fr 0.5fr;
-  grid-template-rows: auto;
-  grid-template-areas: 
-    "header header header header header header header"
-    ". translation . book . chapter ."
-    ". text text text text text .";
-  grid-column-gap: 10px;
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
+}
+
+#main-header {
+  background-color: #4056A1;
+}
+
+#main-header h1 {
+  font-family: 'B612', sans-serif;
+  font-size: 50px;
+  color: white; 
+  text-align: center;
+}
+
+.text {
+  font-size: 20px;
+  line-height: 2em;
+  background-color: #c5cbe3;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.text .v {
+  vertical-align: super;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.field-select {
+  padding-top: 10px;
+  padding-left: 5px;
+  float: left; 
+  width: 33.3%;
+  box-sizing: border-box; /* takes padding + border and figures in with 
+                          width element itself! */
+  text-align: center;
+}
+
+@media(max-width:800px){ /* these styles only in effect if width under 600 px */
+  .field-select {
+      width: 100%;
+      text-align: center;
+  }
+
+  #main-header h1 {
+      text-align: center;
+  }
 }
